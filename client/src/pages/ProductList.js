@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useLocation } from "react-router-dom";
 import "./ProductList.css"
 import Navbar from "../components/Navbar"
 import Announcement from "../components/Announcement"
@@ -8,6 +9,23 @@ import Footer from "../components/Footer"
 
 
 const ProductList = () => {
+  const location = useLocation()
+  const cat = (location.pathname.split("/")[2])
+  const [filters, setFilters] = useState({})
+  const [sort, setSort] = useState("newest")
+
+
+
+
+  const handleFilters = (e) => {
+    const value = e.target.value;
+    setFilters({
+      ...filters,
+      [e.target.name]: value.toLoverCase()
+    })
+  }
+
+  
   return (
     <div className='productlist-container'>
         <Announcement />
@@ -16,17 +34,17 @@ const ProductList = () => {
         <div className='filter-container'>
         <div className='filter'>
           <span className='filtertext'>Filter Product:</span>
-        <select className='select'>
-            <option disabled selected>Color</option>
-            <option>White</option>
-            <option>Black</option>
-            <option>Red</option>
-            <option>Blue</option>
-            <option>Green</option>
-            <option>Yellow</option>
+        <select className='select' name="color" onChange={handleFilters}>
+            <option disabled >Color</option>
+            <option>white</option>
+            <option>black</option>
+            <option>red</option>
+            <option>blue</option>
+            <option>green</option>
+            <option>yellow</option>
         </select>
-        <select className='select'>
-        <option disabled selected>Size</option>
+        <select className='select' name="size" onChange={handleFilters}>
+        <option disabled >Size</option>
         <option>XS</option>
         <option>S</option>
         <option>M</option>
@@ -35,15 +53,15 @@ const ProductList = () => {
         </select>
             </div>
         <div className='filter'><span className='filtertext'>Sort Product:</span>
-        <select className='select'>
-        <option selected>Newest</option>
-        <option>Price (asc)</option>
-        <option>Price (desc)</option>
+        <select className='select' onChange={e=>setSort(e.target.value)}>
+        <option value="newest">Newest</option>
+        <option value="asc">Price (asc)</option>
+        <option value="desc">Price (desc)</option>
         </select>
         </div>
         </div>
 
-        <Products />
+        <Products cat={cat} filters={filters} sort={sort}/>
         <Newsletter />
         <Footer />
         </div>
